@@ -1,0 +1,16 @@
+{
+	"name": "detect-memory-leaks-nodejs",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"memory-run": "node --expose_gc memoryTest.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.18.2",
+		"express-status-monitor": "^1.3.4"
+	}
+}

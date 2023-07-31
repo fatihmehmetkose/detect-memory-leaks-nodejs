@@ -1,5 +1,13 @@
 const v8 = require('v8');
-const createLargeObject = require('./createLargeObject');
+
+// Function to create a large object
+function createLargeObject() {
+	const obj = {};
+	for (let i = 0; i < 100000; i++) {
+		obj['key' + i] = 'value' + i;
+	}
+	return obj;
+}
 
 global.gc();
 
@@ -7,15 +15,31 @@ global.gc();
 const initialMemoryUsage = v8.getHeapStatistics().used_heap_size;
 console.log('Initial Memory Usage:', initialMemoryUsage);
 
-// Create the large object
-let largeObject = createLargeObject();
+function closureTest() {
+	// Create the large object
+	let largeObject = createLargeObject();
+	function innerFunction() {
+		const temp = largeObject;
+		console.log('temp.len :>> ', temp.length);
+	}
+	function innerFunctionReset() {
+		largeObject = null;
+	}
+	return {
+		innerFunction,
+		innerFunctionReset,
+	};
+}
+
+const ret = closureTest();
 
 // Track memory usage after creating the large object
 const memoryAfterCreation = v8.getHeapStatistics().used_heap_size;
 console.log('Memory After Creation:', memoryAfterCreation);
 
 // Remove the reference to the large object
-largeObject = null;
+ret.innerFunction();
+// ret.innerFunctionReset();
 
 // Manually run garbage collection (optional, only for testing purposes)
 global.gc();
